@@ -1,16 +1,30 @@
 package speed with SPARK_Mode is
 
-  type Speed is range 0..1000; -- meters per hour
+  type Speed is range 0..10; -- some metric that allows levels of speed 
+   type SpeedType is (normal, takeoffLanding, standby);
    
    type Speedometer is tagged record
-      current_speed: Speed;
+      currentSpeedType : SpeedType;
    end record; 
    
-  function SpeedInvariant (This : in Speedometer) return Boolean is
-     (This.current_speed >= Speed'First and This.current_speed <= Speed'Last);
+   current_speed: Speed;
    
-  procedure accelerateSpeed (This : in out Speedometer) with
-     Pre'Class => (This.SpeedInvariant and This.current_speed < Speed'Last), 
-     Post => This.SpeedInvariant;
+  function SpeedInvariant return Boolean is
+     (current_speed >= Speed'First and current_speed <= Speed'Last);
+   
+  procedure accelerateSpeed (current_speed : in out Speed) with
+     Pre => (SpeedInvariant and current_speed < Speed'Last), 
+     Post => SpeedInvariant and (current_speed = current_speed'Old + 1 or  
+       current_speed = current_speed'Old);
 
+   procedure decreaseSpeed (current_speed : in out Speed) with
+     Pre => (SpeedInvariant and current_speed > Speed'First), 
+     Post => SpeedInvariant and (current_speed = current_speed'Old - 1 or  
+     current_speed = current_speed'Old);
+   
+   procedure AssignSpeedMode(This : in out Speedometer)  with
+     Pre'Class => SpeedInvariant,
+     Post => SpeedInvariant and (This.currentSpeedType = standBy or This.currentSpeedType = takeoffLanding or This.currentSpeedType = normal);
+   
+   
 end speed;
