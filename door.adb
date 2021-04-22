@@ -10,15 +10,12 @@ package body door with SPARK_Mode is
    begin
       CockPitDoor.lock := Locked;
       ExternalDoors.lock := Locked;
-      
-      if CockPitDoor.lock = Locked then cockPitDoorLockedAndClosed := True;
-      end if;
-      if ExternalDoors.lock = Locked then externalDoorsLockedAndClosed := True; 
-      end if;   
    end lockDoors;
 
    procedure lockAllDoors is begin
-         if externalDoorsLockedAndClosed and cockPitDoorLockedAndClosed = True then doorsLockedAndClosed := True;
+      if (CockPitDoor.status = Closed and ExternalDoors.status = Closed) and (CockPitDoor.lock = Locked and ExternalDoors.lock = Locked) then DoorsLockedAndClosed := True;
+      else
+         DoorsLockedAndClosed := False;
       end if;  
    end lockAllDoors;
    

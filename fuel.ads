@@ -16,15 +16,21 @@ package fuel with SPARK_Mode is
    
    procedure addFuel (This : in out PlaneFuelTank) with
      Pre'Class => (This.FuelInvariant and (current_FuelLevel >= FuelLevels'First and current_FuelLevel < FuelLevels'Last)), 
-     Post => (current_FuelLevel >= FuelLevels'First and current_FuelLevel <= FuelLevels'Last) and This.FuelInvariant;
+     Post => (current_FuelLevel = current_FuelLevel'Old + 1 or  
+                current_FuelLevel = current_FuelLevel'Old);
    
-   procedure LowLevelOfFuel (This : in out PlaneFuelTank) with
-     Pre'Class => This.warning = off,
-     Post => This.FuelInvariant;                     
+   procedure burnFuel (This : in out PlaneFuelTank) with
+     Pre'Class => (This.FuelInvariant and (current_FuelLevel <= FuelLevels'Last and current_FuelLevel > FuelLevels'First)), 
+     Post => (current_FuelLevel = current_FuelLevel'Old - 1 or  
+                current_FuelLevel = current_FuelLevel'Old);
+   
+   procedure LoworSufficientLevelOfFuel (This : in out PlaneFuelTank) with
+     Pre'Class => This.warning = off or This.warning = on,
+     Post => This.warning = off or This.warning = on;                     
                                
                                
-   procedure WarningSignONOFF (This : in out PlaneFuelTank) with
-     Pre'Class => This.status = Low and This.FuelInvariant,
+   procedure WarningSignONOFF (This :  in out PlaneFuelTank) with
+     Pre'Class => This.FuelInvariant and ((This.status /= Low) and (This.status = Low)),
      Post => This.FuelInvariant;
    
    function ConstructFuelTank return PlaneFuelTank;
