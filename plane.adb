@@ -87,7 +87,7 @@ package body plane with SPARK_Mode is
    begin
       if curr_Engine = off then
          curr_Engine := on; Put_Line("Engine is "& curr_Engine'Image);
-      else
+     else
          curr_Engine := on; Put_Line("Engine is "& curr_Engine'Image);
       end if;
       Towing_Mode(curr_Engine,curr_tow, curr_Plane_mode);

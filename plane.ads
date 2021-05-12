@@ -29,7 +29,7 @@ package plane with SPARK_Mode is
      (curr_Engine = on or curr_tow = on);
    
    function Engine_Invariant return Boolean is
-     ((curr_Engine = on and (curr_Plane_mode = takeoff_Landing or curr_Plane_mode = normal)) or curr_tow = on);
+     (curr_Engine = on and ((curr_Plane_mode = takeoff_Landing or curr_Plane_mode = normal) or curr_tow = on));
    
    function Fly_Mode_Doors return Boolean is
       (Is_Ct_Ext_Lock_Close = True and curr_Plane_mode = normal);
@@ -82,8 +82,8 @@ package plane with SPARK_Mode is
      Post => (Engine_Invariant and Engine_Tow_Invariant)  and ((curr_Engine = on and curr_Plane_mode = standby) or (curr_Engine = off and curr_Plane_mode = standby));
    
    procedure Power_Off_Mode(curr_Engine :  in out Engine) with
-     Pre => Engine_Invariant,
-     Post => Engine_Invariant and curr_Engine = off;
+     Pre => Engine_Invariant and curr_Plane_mode = standBy,
+     Post => Engine_Invariant and (curr_Engine = off and curr_Plane_mode = standBy);
    
    procedure Close_Lock_All_Doors;
    

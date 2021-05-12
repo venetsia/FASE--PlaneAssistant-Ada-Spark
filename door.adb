@@ -35,6 +35,7 @@ package body door with SPARK_Mode is
       begin
       Cockpit_Door.status := Open;
       External_Doors.status := Open;
+      Is_Lock_External_Cockpit;
 
    end Open_External_Cockpit_Doors;
    

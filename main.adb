@@ -313,6 +313,23 @@ begin
          if (curr_Plane_mode = standby and curr_Engine = on) and (curr_altitude.current_Altitude_Type = standby and curr_speed.current_Speed_Type = standby) then
             Put_Line("Is Plane landed?:" & Landing'Image);
             delay 2.0;
+            if Landing = False
+            then
+               Unlock_Passanger_Utility_Doors;
+               Put_Line("Unlocking passanger utility doors...");
+               delay 2.0;
+               Put_Line("Are passanger utility doors locked? : " & Util_Doors_Locked_Closed'Image);
+               if Util_Doors_Locked_Closed = False
+               then
+                 Put_Line("Passengers are free to take their stuff.");
+                  delay 2.0;
+               end if;
+               Open_Unlock_External_Cockpit_Doors;
+               Put_Line("Unlocking cockpit door and external doors...");
+               Put_Line("Are external doors and cockpit door locked? : " & Is_Ct_Ext_Lock_Close'Image);
+               delay 2.0;
+            end if;
+
             Put_Line("Putting Plane on towing mode shortly");
             delay 2.0;
             Power_Off_Mode(curr_Engine);
