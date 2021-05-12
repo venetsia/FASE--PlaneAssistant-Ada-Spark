@@ -2,34 +2,38 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 package body speed with SPARK_Mode is
 
-   procedure accelerateSpeed(current_speed : in out Speed) is
+   procedure Accelerate_Speed(current_speed : in out Speed; This : in out Speedometer ) is
    begin
       if (current_speed < Speed'Last)
       then current_speed := current_speed + 1;
       end if;
-      Put_Line("Current Speed is : "& current_speed'Image);
-   end accelerateSpeed;
+      Assign_Speed_Mode(This);
+   end Accelerate_Speed;
    
-   procedure decreaseSpeed(current_speed : in out Speed) is
+   procedure Decrease_Speed(current_speed : in out Speed; This : in out Speedometer) is
    begin
       if (current_speed > Speed'First)
       then current_speed := current_speed - 1;
       end if;
-      Put_Line("Current Speed is : "& current_speed'Image);
-   end decreaseSpeed;
+      Assign_Speed_Mode(This);
+   end Decrease_Speed;
 
-   procedure AssignSpeedMode(This : in out Speedometer) is
+   procedure Assign_Speed_Mode(This : in out Speedometer) is
    begin
-      if (current_speed >= 6 and current_speed <= Speed'Last)
-      then This.currentSpeedType := normal;
-      else if (current_speed < 6 and current_speed /= Speed'First) 
-         then This.currentSpeedType := takeoffLanding;
-         else if current_speed = Speed'First
-            then
-               This.currentSpeedType := standBy;
-            end if;   
-         end if;
+      if (current_speed > 6 and current_speed <= Speed'Last)
+      then This.current_Speed_Type := normal;
       end if;
-   end AssignSpeedMode;
+      if (current_speed < 6 and current_speed /= Speed'First) 
+      then This.current_Speed_Type := speeding;
+      end if;
+      if current_speed = Speed'First
+      then
+         This.current_Speed_Type := standBy;
+      end if;
+      if current_speed = 6 
+      then
+         This.current_Speed_Type := takeoff_Landing;
+      end if;
+   end Assign_Speed_Mode;
    
 end speed;

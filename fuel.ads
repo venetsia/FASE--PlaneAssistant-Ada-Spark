@@ -1,37 +1,35 @@
 package fuel with SPARK_Mode is
 
-   type fuelStatus is (Low, Sufficient);
-   type warnSign is (on, off);
-   type FuelLevels is range 0..4000; -- litres
+   type fuel_Status is (Low, Sufficient);
+   type warn_Sign is (on, off);
+   type Fuel_Levels is range 0..45; -- litres
    
-   type PlaneFuelTank is tagged record
-      status: fuelStatus;
-      warning: warnSign;
+   type Plane_Fuel_Tank is tagged record
+      status: fuel_Status;
+      warning: warn_Sign;
    end record;
    
-   current_FuelLevel: FuelLevels; 
+   current_Fuel_Level: Fuel_Levels; 
    
-   function FuelInvariant (This : in PlaneFuelTank) return Boolean is
+   function Fuel_Invariant (This : in Plane_Fuel_Tank) return Boolean is
      (This.status = Low or This.warning = off);
    
-   procedure addFuel (This : in out PlaneFuelTank) with
-     Pre'Class => (This.FuelInvariant and (current_FuelLevel >= FuelLevels'First and current_FuelLevel < FuelLevels'Last)), 
-     Post => (current_FuelLevel = current_FuelLevel'Old + 1 or  
-                current_FuelLevel = current_FuelLevel'Old);
+   function Fuel_Level_Invarant return Boolean is
+     (current_Fuel_Level >= Fuel_Levels'First and current_Fuel_Level <= Fuel_Levels'Last);
    
-   procedure burnFuel (This : in out PlaneFuelTank) with
-     Pre'Class => (This.FuelInvariant and (current_FuelLevel <= FuelLevels'Last and current_FuelLevel > FuelLevels'First)), 
-     Post => (current_FuelLevel = current_FuelLevel'Old - 1 or  
-                current_FuelLevel = current_FuelLevel'Old);
+   procedure Add_Fuel (This : in out Plane_Fuel_Tank) with
+     Pre'Class => ((This.Fuel_Invariant  and Fuel_Level_Invarant) and (current_Fuel_Level >= Fuel_Levels'First and current_Fuel_Level < Fuel_Levels'Last)), 
+     Post => (This.Fuel_Invariant  and Fuel_Level_Invarant) and (current_Fuel_Level = current_Fuel_Level'Old + 1 or  
+                current_Fuel_Level = current_Fuel_Level'Old);
    
-   procedure LoworSufficientLevelOfFuel (This : in out PlaneFuelTank) with
-     Pre'Class => This.warning = off or This.warning = on,
-     Post => This.warning = off or This.warning = on;                     
+   procedure Burn_Fuel (This : in out Plane_Fuel_Tank) with
+     Pre'Class => ((This.Fuel_Invariant  and Fuel_Level_Invarant) and (current_Fuel_Level <= Fuel_Levels'Last and current_Fuel_Level > Fuel_Levels'First)), 
+     Post => (This.Fuel_Invariant  and Fuel_Level_Invarant) and (current_Fuel_Level = current_Fuel_Level'Old - 1 or  
+                current_Fuel_Level = current_Fuel_Level'Old);
+   
+   procedure Low_Sufficient_Fuel_Level (This : in out Plane_Fuel_Tank) with
+     Pre'Class => (This.Fuel_Invariant  and Fuel_Level_Invarant) and (current_Fuel_Level < 15 or current_Fuel_Level >= 15),
+     Post => (This.Fuel_Invariant  and Fuel_Level_Invarant);                     
                                
-                               
-   procedure WarningSignONOFF (This :  in out PlaneFuelTank) with
-     Pre'Class => This.FuelInvariant and ((This.status /= Low) and (This.status = Low)),
-     Post => This.FuelInvariant;
-   
-   function ConstructFuelTank return PlaneFuelTank;
 end fuel;
+

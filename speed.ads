@@ -1,30 +1,30 @@
 package speed with SPARK_Mode is
 
-  type Speed is range 0..10; -- some metric that allows levels of speed 
-   type SpeedType is (normal, takeoffLanding, standby);
-   
+   type Speed is range 0..10; -- some metric that allows levels of speed 
+   type Speed_Type is (normal, speeding, takeoff_Landing, standby);
+
    type Speedometer is tagged record
-      currentSpeedType : SpeedType;
+      current_Speed_Type : Speed_Type;
    end record; 
    
    current_speed: Speed;
    
-  function SpeedInvariant return Boolean is
+  function Speed_Invariant return Boolean is
      (current_speed >= Speed'First and current_speed <= Speed'Last);
    
-  procedure accelerateSpeed (current_speed : in out Speed) with
-     Pre => (SpeedInvariant and current_speed < Speed'Last), 
-     Post => SpeedInvariant and (current_speed = current_speed'Old + 1 or  
+  procedure Accelerate_Speed (current_speed : in out Speed; This : in out Speedometer) with
+     Pre'Class => (Speed_Invariant and current_speed < Speed'Last), 
+     Post => Speed_Invariant and (current_speed = current_speed'Old + 1 or  
        current_speed = current_speed'Old);
 
-   procedure decreaseSpeed (current_speed : in out Speed) with
-     Pre => (SpeedInvariant and current_speed > Speed'First), 
-     Post => SpeedInvariant and (current_speed = current_speed'Old - 1 or  
+   procedure Decrease_Speed (current_speed : in out Speed; This : in out Speedometer) with
+     Pre'Class => (Speed_Invariant and current_speed > Speed'First), 
+     Post => Speed_Invariant and (current_speed = current_speed'Old - 1 or  
      current_speed = current_speed'Old);
    
-   procedure AssignSpeedMode(This : in out Speedometer)  with
-     Pre'Class => SpeedInvariant,
-     Post => SpeedInvariant and (This.currentSpeedType = standBy or This.currentSpeedType = takeoffLanding or This.currentSpeedType = normal);
+   procedure Assign_Speed_Mode(This : in out Speedometer)  with
+     Pre'Class => Speed_Invariant,
+     Post => Speed_Invariant;
    
    
 end speed;

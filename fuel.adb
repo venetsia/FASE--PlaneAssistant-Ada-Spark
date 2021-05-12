@@ -2,53 +2,41 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 package body fuel  with SPARK_Mode is
    
-   procedure addFuel(This : in out PlaneFuelTank) is
+   procedure Add_Fuel(This : in out Plane_Fuel_Tank) is
    begin
-      if (current_FuelLevel >= 2500)
-      then current_FuelLevel := current_FuelLevel + 1; This.warning := off; This.status := Sufficient;
+      if (current_Fuel_Level >= 15)
+      then current_Fuel_Level := current_Fuel_Level + 1; This.warning := off; This.status := Sufficient;
       else
-         if (current_FuelLevel  < 2500)
-         then current_FuelLevel  := current_FuelLevel  + 1; This.warning := on; This.status := Low;
+         if (current_Fuel_Level  < 15)
+         then current_Fuel_Level  := current_Fuel_Level  + 1; This.warning := on; This.status := Low;
          end if;
       end if;
-      Put_Line("Fuel in liters is"& current_FuelLevel'Image & ", which is is " & This.status'Image);
-   end addFuel;
+   end Add_Fuel;
    
-   procedure burnFuel(This : in out PlaneFuelTank) is
+   procedure Burn_Fuel(This : in out Plane_Fuel_Tank) is
    begin
-      if (current_FuelLevel >= 2500)
-      then current_FuelLevel := current_FuelLevel - 1; This.warning := off; This.status := Sufficient;
+      Put_Line("Fuel " & current_Fuel_Level'Image);
+      if (current_Fuel_Level >= 15)
+      then current_Fuel_Level := current_Fuel_Level - 1; This.warning := off; This.status := Sufficient;
       else
-         if (current_FuelLevel  < 2500)
-         then current_FuelLevel  := current_FuelLevel  - 1; This.warning := on; This.status := Low;
+         if (current_Fuel_Level  < 15)
+         then current_Fuel_Level  := current_Fuel_Level  - 1; This.warning := on; This.status := Low;
          end if;
       end if;
-      Put_Line("Fuel in liters is"& current_FuelLevel'Image & ", which is is " & This.status'Image);
-   end burnFuel;
+   end Burn_Fuel;
    
-   procedure LoworSufficientLevelOfFuel (This : in out PlaneFuelTank) is 
+   procedure Low_Sufficient_Fuel_Level (This : in out Plane_Fuel_Tank) is 
    begin
-      if current_FuelLevel >= 2500
-      then This.status := Sufficient;
-      else This.status := Low; Put_Line("Low on fuel, status changed:"& This.status'Image);
+      if current_Fuel_Level >= 15
+      then 
+         This.status := Sufficient;
+         This.warning := off;
+      else 
+         This.status := Low;
+         This.warning := on;
+         Put_Line("Warning light is " & This.warning'Image);
       end if;
-   end LoworSufficientLevelOfFuel;
+   end Low_Sufficient_Fuel_Level;
    
-   
-   procedure WarningSignONOFF (This : in out PlaneFuelTank) is
-   begin
-      if This.status = Low then
-         This.warning := on;Put_Line("Warning light is " & This.warning'Image);
-      else
-         This.warning := off; Put_Line("Warning light is " & This.warning'Image);
-      end if;
-   end WarningSignONOFF;
-
-   
-   function ConstructFuelTank return PlaneFuelTank is 
-      result : PlaneFuelTank := (status => (Sufficient), warning => (off));
-   begin           
-      return result;
-   end ConstructFuelTank;
    
 end fuel;
